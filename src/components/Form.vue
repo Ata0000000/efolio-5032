@@ -84,15 +84,7 @@ import { ref } from 'vue';
       });
       clearForm();
   };
-  const clearForm = () => {
-    formData.value = {
-        username: '',
-        password: '',
-        isAustralian: false,
-        reason: '',
-        gender: ''
-    };
-};
+  
 </script>
 
 <style scoped>
@@ -100,7 +92,15 @@ import { ref } from 'vue';
    border: 1px solid #ccc;
    border-radius: 10px;
    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   width:100%;
    }
+   @media (max-width: 767.98px) { 
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+   
    .card-header {
    background-color: #275FDA;
    color: white;

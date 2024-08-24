@@ -1,21 +1,38 @@
 <template>
-    <!-- Using Bootstrap's Header template (starter code) -->
-    <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
-    <div class="container">
-      <header class="d-flex justify-content-center py-3">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <router-link to="/" class="nav-link" active-class="active" aria-current="page"
-              >Home (Week 5)</router-link
-            >
-          </li>
-          <li class="nav-item">
-            <router-link to="/about" class="nav-link" active-class="active">About</router-link>
-          </li>
-        </ul>
-      </header>
-    </div>
-  </template>
+  <div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <router-link to="/" class="nav-link" active-class="active" aria-current="page">Home</router-link>
+        </li>
+        <!-- About link should always be visible -->
+        <li class="nav-item">
+          <router-link to="/about" class="nav-link">About</router-link>
+        </li>
+        <!-- Conditionally render Logout button based on authentication -->
+        <li class="nav-item" v-if="isAuthenticated">
+          <button class="btn btn-link" @click="logout">Logout</button>
+        </li>
+        <li class="nav-item" v-else>
+          <router-link to="/login" class="nav-link">Login</router-link>
+        </li>
+      </ul>
+    </header>
+  </div>
+</template>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true');
+const router = useRouter();
+
+const logout = () => {
+  localStorage.removeItem('isAuthenticated');
+  isAuthenticated.value = false;
+  router.push('/login');
+};
+</script>
   
   <style scoped>
   .b-example-divider {

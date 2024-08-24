@@ -52,12 +52,6 @@
                             <small v-if="errors.gender" class="text-danger">{{ errors.gender }}</small>
                         </div>
                     </div>
-                    
-                    <!-- Suburb Field -->
-                    <div class="mb-3">
-                        <label for="suburb" class="form-label">Suburb</label>
-                        <input type="text" class="form-control" id="suburb" v-model="formData.suburb" />
-                    </div>
 
                     <div class="mb-3">
                         <label for="reason" class="form-label">Reason for joining</label>
@@ -83,7 +77,6 @@
                 <Column field="isAustralian" header="Australian Resident?" :body="isAustralianColumn"></Column>
                 <Column field="gender" header="Gender"></Column>
                 <Column field="reason" header="Reason"></Column>
-                <Column field="suburb" header="Suburb"></Column>
             </DataTable>
         </div>
     </div>
@@ -100,8 +93,7 @@ const formData = ref({
     confirmPassword:'',
     isAustralian: false,
     reason: '',
-    gender: '',
-    suburb:'Clayton'
+    gender: ''
 });
 
 const submittedCards = ref([]);
@@ -139,7 +131,7 @@ const validateReason = () => {
     } else {
         errors.value.reason = null;
         
-
+        // Check if the reason contains the word "friend"
         if (reason.toLowerCase().includes('friend')) {
             friendMessage.value = "Great to have a friend!";
         } else {
@@ -147,7 +139,6 @@ const validateReason = () => {
         }
     }
 };
-
 
 const validateName = (blur) => {
     if (formData.value.username.length < 3) {
@@ -166,7 +157,7 @@ const validatePassword = (blur) => {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (password.length < minLength) {
-        if (blur) errors.value.password = `Password must be at least ${minLength} characters long.`;
+        if (blur) errors.value.password = "Password must be at least ${minLength} characters long.";
     } else if (!hasUppercase) {
         if (blur) errors.value.password = "Password must contain at least one uppercase letter.";
     } else if (!hasLowercase) {

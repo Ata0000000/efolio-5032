@@ -4,7 +4,6 @@ import BHeader from './components/BHeader.vue';
 
 
 </script>
-
 <template>
   <div class="main-container">
     <header>
@@ -15,3 +14,7 @@ import BHeader from './components/BHeader.vue';
     </main>
   </div>
 </template>
+
+
+
+

@@ -24,6 +24,15 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
+                            <label for="confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm-password"
+                             v-model="formData.confirmPassword"
+                             @blur="() => validateConfirmPassword(true)">
+                            <small v-if="errors.confirmPassword" class="text-danger">{{ errors.confirmPassword }}</small>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="isAustralian" 
                                 v-model="formData.isAustralian" @change="validateResident">
@@ -43,39 +52,44 @@
                             <small v-if="errors.gender" class="text-danger">{{ errors.gender }}</small>
                         </div>
                     </div>
+                    
+                    <!-- Suburb Field -->
+                    <div class="mb-3">
+                        <label for="suburb" class="form-label">Suburb</label>
+                        <input type="text" class="form-control" id="suburb" v-model="formData.suburb" />
+                    </div>
+
                     <div class="mb-3">
                         <label for="reason" class="form-label">Reason for joining</label>
                         <textarea class="form-control" id="reason" rows="3" 
                         v-model="formData.reason" @blur="validateReason" @input="validateReason"></textarea>
                         <small v-if="errors.reason" class="text-danger">{{ errors.reason }}</small>
+                        <small v-if="friendMessage" class="text-success">{{ friendMessage }}</small>
                     </div>
+                    
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>
-                        <button type="button" class="btn btn-secondary" 
-                                @click="clearForm">Clear</button>
+                        <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
                     </div>
                 </form>
+                
             </div>
         </div>
 
-        <div class="row mt-5" v-if="submittedCards.length">
-            <div class="d-flex flex-wrap justify-content-start">
-                <div v-for="(card, index) in submittedCards" :key="index" class="card m-2" style="width: 18rem;">
-                    <div class="card-header">
-                        User Information
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Username: {{ card.username }}</li>
-                        <li class="list-group-item">Password: {{ card.password }}</li>
-                        <li class="list-group-item">Australian Resident: {{ card.isAustralian ? 'Yes' : 'No' }}</li>
-                        <li class="list-group-item">Gender: {{ card.gender }}</li>
-                        <li class="list-group-item">Reason: {{ card.reason }}</li>
-                    </ul>
-                </div>
-            </div>
+        <div v-if="submittedCards.length" class="mt-5">
+            <DataTable :value="submittedCards">
+                <Column field="username" header="Username"></Column>
+                <Column field="password" header="Password"></Column>
+                <Column field="isAustralian" header="Australian Resident?" :body="isAustralianColumn"></Column>
+                <Column field="gender" header="Gender"></Column>
+                <Column field="reason" header="Reason"></Column>
+                <Column field="suburb" header="Suburb"></Column>
+            </DataTable>
         </div>
     </div>
 </template>
+
+
 
 <script setup>
 import { ref } from 'vue';
@@ -83,9 +97,11 @@ import { ref } from 'vue';
 const formData = ref({
     username: '',
     password: '',
+    confirmPassword:'',
     isAustralian: false,
     reason: '',
-    gender: ''
+    gender: '',
+    suburb:'Clayton'
 });
 
 const submittedCards = ref([]);
@@ -93,6 +109,7 @@ const submittedCards = ref([]);
 const submitForm =()=>{
     validateName(true);
     validatePassword(true);
+    validateConfirmPassword(true); 
     validateResident();
     validateGender();
     validateReason();
@@ -106,10 +123,31 @@ const submitForm =()=>{
 const errors = ref({
     username: null,
     password: null,
+    confirmPassword:null,
     isAustralian: null,
     gender: null,
     reason: null,
 });
+
+const friendMessage = ref('');
+const validateReason = () => {
+    const reason = formData.value.reason.trim();
+    
+    if (reason.length === 0) {
+        errors.value.reason = "Please provide a reason for joining.";
+        friendMessage.value = '';
+    } else {
+        errors.value.reason = null;
+        
+
+        if (reason.toLowerCase().includes('friend')) {
+            friendMessage.value = "Great to have a friend!";
+        } else {
+            friendMessage.value = '';
+        }
+    }
+};
+
 
 const validateName = (blur) => {
     if (formData.value.username.length < 3) {
@@ -158,22 +196,25 @@ const validateGender = () => {
     }
 };
 
-const validateReason = () => {
-    if (formData.value.reason.trim().length === 0) {
-        errors.value.reason = "Please provide a reason for joining.";
-    } else {
-        errors.value.reason = null;
-    }
-};
+
 
 const clearForm = () => {
     formData.value = {
         username: '',
         password: '',
+        confirmPassword: '', 
         isAustralian: false,
         reason: '',
         gender: ''
     };
+};
+
+const validateConfirmPassword = (blur) => {
+  if (formData.value.password !== formData.value.confirmPassword) {
+    if (blur) errors.value.confirmPassword = 'Passwords do not match.';
+  } else {
+    errors.value.confirmPassword = null;
+  }
 };
 
 </script>

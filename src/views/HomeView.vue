@@ -53,13 +53,14 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                        <div class="mb-3">
                         <label for="reason" class="form-label">Reason for joining</label>
                         <textarea class="form-control" id="reason" rows="3" 
                         v-model="formData.reason" @blur="validateReason" @input="validateReason"></textarea>
                         <small v-if="errors.reason" class="text-danger">{{ errors.reason }}</small>
                         <small v-if="friendMessage" class="text-success">{{ friendMessage }}</small>
-                    </div>
+                        </div>
+
                     
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>

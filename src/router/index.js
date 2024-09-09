@@ -26,25 +26,27 @@ const routes = [
     path: '/access-denied',
     name: 'AccessDenied',
     component: AccessDeniedView
-  }
+  },
+  {
+    path:'/FireLogin',
+    name:'FireLogin',
+    component:FirebaseSigninView
+  },
 ];
+
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 });
 
-
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
   if (to.name === 'About' && !isAuthenticated) {
-    next('/login');  // 如果未登录，跳转到登录页面
+    next('/login');  
   } else {
-    next();  // 允许导航到目标页面
+    next();  
   }
 });
-
-  
-
 export default router;

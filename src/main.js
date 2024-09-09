@@ -17,3 +17,5 @@ app.use(PrimeVue, { theme: { preset: Aura } })
 app.use(router)
 
 app.mount('#app')
+
+initializeApp(firebaseConfig);
